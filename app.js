@@ -22,8 +22,22 @@ const PORT = process.env.PORT || 5000;
  * ROUTES
 ************************************/
 app.get("/", function (req, res) {
-    res.render("home.ejs");
+    res.render("home.ejs", {title: "Sports USA"});  // title is the Tab Name, passed to ejs header
 })
+
+app.get("/cart", function(req, res) {
+    res.render("cart.ejs", {title: "Sports USA - Cart"});
+})
+
+app.get("/categories/:item", function(req, res) {
+    var item = req.params.item;
+    res.render("categories.ejs", {title: item})
+})
+
+app.get("/signUp", function(req, res) {
+    res.render("signUp.ejs", {title: "Sports USA - Sign Up"});
+})
+
 
 app.listen(PORT, function() {
     console.log(`Server Running on PORT: ${PORT}`);
