@@ -38,6 +38,10 @@ app.get("/signUp", function(req, res) {
     res.render("signUp.ejs", {title: "Sports USA - Sign Up"});
 })
 
+app.get("/vendors", function (req, res) {
+    res.render("vendors.ejs", {title: "Sports USA - Vendors"});
+})
+
 
 app.listen(PORT, function() {
     console.log(`Server Running on PORT: ${PORT}`);
