@@ -12,6 +12,8 @@
   "dependencies": {
     "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "nodemon": "^2.0.2"
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.2",
+    "parse-database-url": "^0.3.0"
   }
 }
