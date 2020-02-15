@@ -1,0 +1,79 @@
+<%- include('partials/header.ejs'); %>
+
+<div class="container">
+    <h3>Customer Data</h3>
+    <table class="table">
+            <tr>
+                <td scope="col">ID</td>
+                <td scope="col">First</td>
+                <td scope="col">Last</td>
+                <td scope="col">Email</td>
+                <td scope="col">Phone</td>
+                <td scope="col">LogIn</td>
+                <td scope="col">Street</td>
+                <td scope="col">City</td>
+                <td scope="col">Zip</td>
+                <td scope="col">State</td>
+            </tr>
+        <% customers.forEach(function(customer) { %>
+            <tr>
+                <td><%= customer.customerID%></td>
+                <td><%= customer.firstName%></td>
+                <td><%= customer.lastName%></td>
+                <td><%= customer.email%></td>
+                <td><%= customer.phoneNumber%></td>
+                <td><%= customer.logIn%></td>
+                <td><%= customer.streetAddress%></td>
+                <td><%= customer.city%></td>
+                <td><%= customer.zip%></td>
+                <td><%= customer.state%></td>
+                <td><button type="button" class="btn btn-danger">Delete</button></td>
+                <td><button type="button" class="btn btn-primary">Update</button></td>
+            </tr>
+        <% }); %>
+    </table>
+    <button type="button" class="btn btn-primary">ADD CUSTOMER</button>
+</div>
+
+<div class="container">
+    <h3>Items</h3>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sort Items By Vendor
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <% vendors.forEach(function(vendor) { %>
+                <a class="dropdown-item" href="#"><%= vendor.vendorName%></a>
+            <% }) %>
+        </div>
+    </div>
+    <table class="table">
+            <tr>
+                <td scope="col">Item</td>
+                <td scope="col">ID</td>
+                <td scope="col">Vendor</td>
+                <td scope="col">Price</td>
+                <td scope="col">Quantity Available</td>
+                <td scope="col">Type</td>
+                <td scope="col">Sport</td>
+            </tr>
+        <% items.forEach(function(item) { %>
+            <tr>
+                <td><%= item.itemName%></td>
+                <td><%= item.itemID%></td>
+                <td><%= item.vendorName%></td>
+                <td><%= item.price%></td>
+                <td><%= item.quantity%></td>
+                <td><%= item.type%></td>
+                <td><%= item.sport%></td>
+                <td><button type="button" class="btn btn-danger">Delete</button></td>
+                <td><button type="button" class="btn btn-primary">Update</button></td>
+            </tr>
+        <% }); %>
+    </table>
+    <button type="button" class="btn btn-primary">ADD ITEM</button>
+    <button type="button" class="btn btn-secondary">ADD VENDOR</button>
+</div>
+
+
+<%- include('partials/footer.ejs'); %>
