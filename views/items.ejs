@@ -1,0 +1,22 @@
+<%- include('partials/header.ejs'); %>
+
+    <h3>All Items</h3>
+    <div class="container">
+        <div class="row">
+            <% items.forEach(function(item, i) { %>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title"><%= item.itemName%></h5>
+                    <p class="card-text">Vendor: <%= item.vendorName%></p>
+                    <p class="card-text">Price: <%= item.price%></p>
+                    <p class="card-text">Type: <%= item.type%></p>
+                    <a href="#" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+
+<%- include('partials/footer.ejs'); %>
