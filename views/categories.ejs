@@ -1,7 +1,26 @@
 <%- include('partials/header.ejs'); %>
 
-<h1>You selected <%= title %>, these items will be retrieved from the database and displayed below</h1>
-
-<button type="submit">Add to Cart </button>
+    <h1><%= title %></h1>
+    
+    <% if(items.length == 0) { %>
+        <h3>No Results Matching: <%=title%></h3>
+    <% }; %>
+    <div class="container">
+        <div class="row">
+            <% items.forEach(function(item, i) { %>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title"><%= item.itemName%></h5>
+                    <p class="card-text">Vendor: <%= item.vendorName%></p>
+                    <p class="card-text">Price: <%= item.price%></p>
+                    <p class="card-text">Type: <%= item.type%></p>
+                    <a href="#" class="btn btn-primary">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
 
 <%- include('partials/footer.ejs'); %>

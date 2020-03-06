@@ -11,8 +11,9 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-//const mysql = require("./dbcon-dev.js"); // CHANGE TO ./dbcon.js IN PRODUCTION
-const mysql = require("./dbcon.js");
+const mysql = require("./dbcon-dev.js"); // CHANGE TO ./dbcon.js IN PRODUCTION
+//const mysql = require("./dbcon.js");
+const queries = require("./queries.js");
 
 
 /*************************
@@ -38,8 +39,20 @@ app.get("/cart", function(req, res) {
 });
 
 app.get("/categories/:item", function(req, res) {
-    var item = req.params.item;
-    res.render("categories.ejs", {title: item})
+    let sport = req.params.item;
+    let context = {};
+    context.title = sport;
+    let callbackCount = 0;
+    
+    // get all items of the specific item
+    queries.getItemsBySport(context, sport, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1) {
+            res.render("categories.ejs", context);
+        }
+    }
+    
 });
 
 app.get("/signUp", function(req, res) {
@@ -52,7 +65,7 @@ app.get("/items", function (req, res) {
     context.title = "Sports USA - Items";
 
     // query all items, send as object to template
-    getItems(context, mysql, complete);
+    queries.getItems(context, mysql, complete);
     function complete() {
         callbackCount++;
         if (callbackCount === 1) {
@@ -66,9 +79,9 @@ app.get("/admin", function(req, res) {
     var context = {};
     context.title = "Admin";
     
-    getCustomers(context, mysql, complete);
-    getItems(context, mysql, complete);
-    getVendors(context, mysql, complete)
+    queries.getCustomers(context, mysql, complete);
+    queries.getItems(context, mysql, complete);
+    queries.getVendors(context, mysql, complete)
     function complete() {
         callbackCount++;
         if (callbackCount === 3)
@@ -78,18 +91,29 @@ app.get("/admin", function(req, res) {
     }
 });
 
+app.delete("/admin", function(req, res) {
+    let callbackCount = 0;
+    req.query.id;
+    queries.deleteItem(req.query.id, mysql, complete);
+    function complete() {
+        callbackCount++
+        if (callbackCount === 1)
+        {
+            res.send("OK");
+        }
+    }
+})
+
 app.post("/addItem", function(req, res) {
     console.log(req.body);
-    let context = {};
-    context.title = "Add Item";
     let callbackCount = 0;
 
-    addItem(req.body, mysql, complete);
+    queries.addItem(req.body, mysql, complete);
     function complete() {
         callbackCount++;
         if (callbackCount === 1)
         {
-            res.render("addItem.ejs", context);
+            res.redirect("/admin");
         }
     }
 });
@@ -125,55 +149,4 @@ app.listen(PORT, function() {
 ** HELPER FUNCTIONS - MOVE TO NEW FILE EVENTUALLY
 TODO: consoidate get functions to take query as argument
 **************************************************/
-function getCustomers(context, mysql, complete)
-{
-    let query = "SELECT customerID, firstName, lastName, email, phoneNumber, logIn, streetAddress, city, zip, state FROM customers";
-    mysql.pool.query(query, function(err, results, fields) {
-        if (err) {
-            console.log(err);
-            complete();
-        }
-        context.customers = results;
-        complete();
-    });
-} 
 
-function getItems(context, mysql, complete)
-{
-    let query = "SELECT itemID, vendorName, itemName, price, quantity, type, sport FROM items JOIN vendors ON items.vendorID = vendors.vendorID";
-    mysql.pool.query(query, function(err, results, fields) {
-        if (err) {
-            console.log(err);
-            complete();
-        }
-        context.items = results;
-        complete();
-    });
-} 
-
-function getVendors(context, mysql, complete)
-{
-    let query = "SELECT vendorName FROM vendors";
-    mysql.pool.query(query, function(err, results, fields) {
-        if (err) {
-            console.log(err);
-            complete();
-        }
-        context.vendors = results;
-        complete();
-    });
-} 
-
-
-function addItem(context, mysql, complete)
-{
-    let query = `INSERT INTO items (vendorID, itemName, price, quantity, type, sport) VALUES ((SELECT vendorID FROM vendors WHERE vendorName="${context.vendor}"), "${context.itemName}", "${context.price}", ${context.quantity}, "${context.type}", "${context.sport}")`;
-
-    mysql.pool.query(query, function(err, results, fields) {
-        if (err) {
-            console.log(err);
-            complete();
-        }
-        complete();
-    });
-}

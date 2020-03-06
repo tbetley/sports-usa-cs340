@@ -58,15 +58,15 @@
                 <td scope="col">Sport</td>
             </tr>
         <% items.forEach(function(item) { %>
-            <tr>
+            <tr id="itemRow">
                 <td><%= item.itemName%></td>
-                <td><%= item.itemID%></td>
+                <td id="itemID"><%= item.itemID%></td>
                 <td><%= item.vendorName%></td>
                 <td><%= item.price%></td>
                 <td><%= item.quantity%></td>
                 <td><%= item.type%></td>
                 <td><%= item.sport%></td>
-                <td><button type="button" class="btn btn-danger">Delete</button></td>
+                <td><button type="button" class="btn btn-danger" id="delete">Delete</button></td>
                 <td><button type="button" class="btn btn-primary">Update</button></td>
             </tr>
         <% }); %>
