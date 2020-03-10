@@ -17,7 +17,7 @@
             </tr>
         <% customers.forEach(function(customer) { %>
             <tr>
-                <td><%= customer.customerID%></td>
+                <td id="customerID"><%= customer.customerID%></td>
                 <td><%= customer.firstName%></td>
                 <td><%= customer.lastName%></td>
                 <td><%= customer.email%></td>
@@ -27,12 +27,12 @@
                 <td><%= customer.city%></td>
                 <td><%= customer.zip%></td>
                 <td><%= customer.state%></td>
-                <td><button type="button" class="btn btn-danger">Delete</button></td>
-                <td><button type="button" class="btn btn-primary">Update</button></td>
+                <td><button type="button" class="btn btn-danger" id="customerDelete">Delete</button></td>
+                <td><button type="button" class="btn btn-primary" id="customerUpdate">Update</button></td>
             </tr>
         <% }); %>
     </table>
-    <button type="button" class="btn btn-primary">ADD CUSTOMER</button>
+    <button type="button" class="btn btn-primary" onclick="window.location.href = '/signUp'">ADD CUSTOMER</button>
 </div>
 
 <div class="container">
@@ -66,8 +66,8 @@
                 <td><%= item.quantity%></td>
                 <td><%= item.type%></td>
                 <td><%= item.sport%></td>
-                <td><button type="button" class="btn btn-danger" id="delete">Delete</button></td>
-                <td><button type="button" class="btn btn-primary">Update</button></td>
+                <td><button type="button" class="btn btn-danger" id="itemDelete">Delete</button></td>
+                <td><button type="button" class="btn btn-primary" id="itemUpdate">Update</button></td>
             </tr>
         <% }); %>
     </table>

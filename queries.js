@@ -43,6 +43,22 @@ function getItemsBySport(context, sport, mysql, complete)
     });
 }
 
+function getItemsByID(context, itemID, mysql, complete)
+{
+    let query = "SELECT itemID, itemName, price, quantity, type, sport FROM items WHERE itemID=?";
+    mysql.pool.query(query, [itemID], function(err, results, fields) {
+        if (err) {
+            console.log(err);
+            complete();
+        }
+        console.log("Results from getItemsByID Query:");
+        console.log(results);
+        context.items = results;
+        complete();
+    });
+}
+
+
 function getVendors(context, mysql, complete)
 {
     let query = "SELECT vendorName FROM vendors";
@@ -88,18 +104,47 @@ function deleteItem(itemID, mysql, complete)
     });
 }
 
-function updateItem(req, itemID, mysql, complete)
+function updateItem(req, mysql, complete)
 {
-    console.log("Adding the following to Item Database: ")
+    console.log("Updating the following to Item Database: ")
     console.log(req);
-    let query = 'Update items (vendorID, itemName, price, quantity, type, sport) SET ((SELECT vendorID FROM vendors WHERE vendorName=?), ?, ?, ?, ?, ?) WHERE itemID= itemID';
-
-    mysql.pool.query(query, [req.vendor, req.itemName, req.price, req.quantity, req.type, req.sport], function(err, results, fields) {
+    //let query = "Update items (itemName, price, quantity, type, sport) SET (?, ?, ?, ?, ?) WHERE itemID=?";
+    let query = "UPDATE items SET itemName=?, price=?, quantity=?, type=?, sport=? WHERE itemID=? ";
+    mysql.pool.query(query, [req.itemName, req.price, req.quantity, req.type, req.sport, req.itemID], function(err, results, fields) {
         if (err) {
             console.log(err);
             complete();
         }
         console.log("Rows changed: " + results.affectedRows);
+        complete();
+    });
+}
+
+function addCustomer(req, mysql, complete)
+{
+    console.log("Adding the following to Customer Database: ")
+    console.log(req);
+    let query = "INSERT INTO customers (email, phoneNumber, logIn, firstName, lastName, streetAddress, city, zip, state) values (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+
+    mysql.pool.query(query, [req.email, req.phoneNumber, req.logIn, req.firstName, req.lastName, req.streetAddress, req.city, req.zip, req.state], function(err, results, fields) {
+        if (err) {
+            console.log(err);
+            complete();
+        }
+        console.log("Rows changed: " + results.affectedRows);
+        complete();
+    });
+}
+
+function deleteCustomer(customerID, mysql, complete)
+{
+    console.log("Deleting the Customer with ID: " + customerID);
+    mysql.pool.query("DELETE FROM customers WHERE customerID=? ", [customerID], function(err, result) {
+        if (err)
+        {
+            console.log(err);
+        }
+        //console.log("Records changed: " + result.affectedRows);
         complete();
     });
 }
@@ -112,3 +157,6 @@ module.exports.getVendors = getVendors;
 module.exports.addItem = addItem;
 module.exports.deleteItem = deleteItem;
 module.exports.updateItem = updateItem;
+module.exports.getItemsByID = getItemsByID;
+module.exports.addCustomer = addCustomer;
+module.exports.deleteCustomer = deleteCustomer;
