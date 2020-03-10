@@ -88,6 +88,22 @@ function deleteItem(itemID, mysql, complete)
     });
 }
 
+function updateItem(req, itemID, mysql, complete)
+{
+    console.log("Adding the following to Item Database: ")
+    console.log(req);
+    let query = 'Update items (vendorID, itemName, price, quantity, type, sport) SET ((SELECT vendorID FROM vendors WHERE vendorName=?), ?, ?, ?, ?, ?) WHERE itemID= itemID';
+
+    mysql.pool.query(query, [req.vendor, req.itemName, req.price, req.quantity, req.type, req.sport], function(err, results, fields) {
+        if (err) {
+            console.log(err);
+            complete();
+        }
+        console.log("Rows changed: " + results.affectedRows);
+        complete();
+    });
+}
+
 
 module.exports.getCustomers = getCustomers;
 module.exports.getItems = getItems;
@@ -95,3 +111,4 @@ module.exports.getItemsBySport = getItemsBySport;
 module.exports.getVendors = getVendors;
 module.exports.addItem = addItem;
 module.exports.deleteItem = deleteItem;
+module.exports.updateItem = updateItem;
