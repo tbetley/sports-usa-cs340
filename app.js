@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 // local port
-const PORT = process.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 /***********************************
  * ROUTES
