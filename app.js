@@ -11,8 +11,8 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-//const mysql = require("./dbcon-dev.js"); // CHANGE TO ./dbcon.js IN PRODUCTION
-const mysql = require("./dbcon.js");
+const mysql = require("./dbcon-dev.js"); // CHANGE TO ./dbcon.js IN PRODUCTION
+//const mysql = require("./dbcon.js");
 const queries = require("./queries.js");
 
 
