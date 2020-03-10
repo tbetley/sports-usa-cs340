@@ -20,12 +20,11 @@ const queries = require("./queries.js");
 ** MIDDLEWARE
 *************************/
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 
 // local port
-const PORT = process.env.PORT || 5000;
+const PORT = process.PORT || 5000;
 
 /***********************************
  * ROUTES
@@ -123,6 +122,27 @@ app.get("/addItem", function(req, res) {
     context.title = "Add Item";
     res.render("addItem.ejs", context);
 });
+
+app.post("/updateItem", function(req, res) {
+    console.log(req.body);
+    let callbackCount = 0;
+
+    queries.updateItem(req.body, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1)
+        {
+            res.redirect("/admin");
+        }
+    }
+});
+
+app.get("/updateItem", function(req, res) {
+    let context = {};
+    context.title = "Update Item";
+    res.render("updateItem.ejs", context);
+});
+
 
 
 // ERROR middleware
