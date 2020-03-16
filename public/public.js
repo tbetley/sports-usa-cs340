@@ -13,18 +13,37 @@ itemIDs.forEach(function(itemID, i) {
     });
     
     updateBtns[i].setAttribute("onclick", `window.location.href = '/updateItem?id=${itemID.textContent}'`);
-    
 });
+
 
 // add update and delete to each customer
 let customerIDs = document.querySelectorAll("#customerID");
 let custDeleteBtn = document.querySelectorAll("#customerDelete");
+let custUpdateBtn = document.querySelectorAll("#customerUpdate");
 
 customerIDs.forEach(function(customerID, i) {
     custDeleteBtn[i].addEventListener("click", function() {
         deleteCustomer(customerID.textContent);
-    })
+    });
+
+    custUpdateBtn[i].setAttribute("onclick", `window.location.href = '/updateCustomer?id=${customerID.textContent}'`);
 })
+
+
+// add update and delete to each vendor
+let vendorIDs = document.querySelectorAll("#vendorID");
+let vendorDeleteBtn = document.querySelectorAll("#vendorDelete");
+let vendorUpdateBtn = document.querySelectorAll("#vendorUpdate");
+
+vendorIDs.forEach(function(vendorID, i) {
+    vendorDeleteBtn[i].addEventListener("click", function() {
+        deleteVendor(vendorID.textContent);
+    });
+
+    vendorUpdateBtn[i].setAttribute("onclick", `window.location.href = '/updateVendor?id=${vendorID.textContent}'`);
+})
+
+
 
 function deleteItem(itemID) {
     //alert("This item ID is: " + itemID);
@@ -48,14 +67,6 @@ function deleteItem(itemID) {
 }
 
 
-function updateItem(itemID) {
-    // alert("this item id is: " + itemID);
-    let req = new XMLHttpRequest();
-
-    req.open("POST", `/update?`)
-}
-
-
 function deleteCustomer(customerID) {
     //alert("This item ID is: " + itemID);
 
@@ -70,7 +81,31 @@ function deleteCustomer(customerID) {
         }
         else 
         {
-            alert("Error is request: " + req.statusText);
+            alert("Error in request: " + req.statusText);
+        }
+    })
+
+    req.send();
+}
+
+function deleteVendor(vendorID) {
+
+    let req = new XMLHttpRequest();
+
+    req.open("DELETE", `/admin?type=vendor&id=${vendorID}`, false);
+
+    req.addEventListener("load", function() {
+        if (req.status >= 200 && req.status < 400 && req.responseText == "OK")
+        {
+            location.reload();
+        }
+        else if (req.status >= 200 && req.status < 400 && req.responseText == "INVALID DELETE") 
+        {
+            alert("Cannot delete vendor with existing items");
+        }
+        else
+        {
+            alert("Error: " + req.statusText);
         }
     })
 

@@ -9,12 +9,25 @@
         <a class="btn btn-primary btn-lg" href="/signUp" role="button">Sign Up Here</a>
     </p>
 </div>
-<h1>Home Page for SPORTS USA</h1>
 
-<p>List of featured items</p>
+<div class="container">
+    <h3 class="center">Featured Items</h3><hr>
+    <div class="row">
+        <% items.forEach(function(item, i) { %>
+        <% if (i < 3) { %>    
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title"><%= item.itemName%></h5>
+                <p class="card-text">Vendor: <%= item.vendorName%></p>
+                <p class="card-text">Price: <%= item.price%></p>
+                <p class="card-text">Type: <%= item.type%></p>
+                <a href="#" class="btn btn-primary">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        <% }}); %>
+    </div>
+</div>
 
 <%- include('partials/footer.ejs'); %>
-
-<footer>
-    <p>Contact Us</p>
-</footer>

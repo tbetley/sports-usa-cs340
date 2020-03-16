@@ -1,7 +1,7 @@
 <%- include('partials/header.ejs'); %>
 
-    <h3>Add An Item</h3>
-    <div class="container">
+    <div class="container dataBlock">
+        <h3>Add An Item</h3>
         <form action="/addItem" method="post">
             <div class="form-group">
                 <label for="vendorID">Vendor</label>
@@ -31,7 +31,7 @@
                 <label for="sport">Sport</label>
                 <input type="text" class="form-control" id="sport" name="sport" required>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit New Item</button>
         </form>
     </div>
 

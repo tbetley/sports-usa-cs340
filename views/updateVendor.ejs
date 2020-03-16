@@ -1,0 +1,23 @@
+<%- include('partials/header.ejs'); %>
+    
+    <div class="container dataBlock">
+        <h3>Update A Vendor</h3>
+        <form action="/updateVendor" method="post">
+            <input type="hidden" name="vendorID" value="<%=vendors[0].vendorID%>" required>
+            <div class="form-group">
+                <label for="vendorName">Vendor Name</label>
+                <input type="text" class="form-control" id="vendorName" name="vendorName" value="<%=vendors[0].vendorName%>" required>
+            </div>
+            <div class="form-group">
+                <label for="website">Vendor Website</label>
+                <input type="text" class="form-control" id="website" name="website" value="<%=vendors[0].website%>" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Vendor Phone Number</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="<%=vendors[0].phoneNumber%>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Vendor</button>
+        </form>
+    </div>
+
+<%- include('partials/footer.ejs'); %>

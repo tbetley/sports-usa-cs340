@@ -31,11 +31,38 @@ const PORT = process.env.PORT || 5000;
  * ROUTES
 ************************************/
 app.get("/", function (req, res) {
-    res.render("home.ejs", {title: "Sports USA"});  
+    let callbackCount = 0;
+    let context = {};
+    context.title = "Sports USA";
+
+    queries.getItems(context, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1) {
+            res.render("home.ejs", context)
+        }
+    } 
+});
+
+app.get("/items", function (req, res) {
+    let callbackCount = 0;
+    let context = {};
+    context.title = "Sports USA - Items";
+
+    // query all items, send as object to template
+    queries.getItems(context, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1) {
+            res.render("items.ejs", context)
+        }
+    }
 });
 
 app.get("/cart", function(req, res) {
-    res.render("cart.ejs", {title: "Sports USA - Cart"});
+    let context = {};
+    context.title = "Sports USA - Cart";
+    res.render("cart.ejs", context);
 });
 
 app.get("/categories/:item", function(req, res) {
@@ -77,21 +104,10 @@ app.post("/signUp", function(req, res) {
     }
 });
 
-app.get("/items", function (req, res) {
-    let callbackCount = 0;
-    let context = {};
-    context.title = "Sports USA - Items";
 
-    // query all items, send as object to template
-    queries.getItems(context, mysql, complete);
-    function complete() {
-        callbackCount++;
-        if (callbackCount === 1) {
-            res.render("items.ejs", context)
-        }
-    }
-});
-
+/****************************************
+** Admin Routes
+****************************************/
 app.get("/admin", function(req, res) {
     let callbackCount = 0;
     var context = {};
@@ -112,6 +128,8 @@ app.get("/admin", function(req, res) {
 app.delete("/admin", function(req, res) {
     let callbackCount = 0;
 
+    console.log("Query Type: " + req.query.type);
+
     if(req.query.type == "item")
     {
         queries.deleteItem(req.query.id, mysql, complete);
@@ -123,7 +141,7 @@ app.delete("/admin", function(req, res) {
             }
         }
     }
-    else if (req.query.type = "customer")
+    else if (req.query.type == "customer")
     {
         queries.deleteCustomer(req.query.id, mysql, complete)
         function complete() {
@@ -134,26 +152,42 @@ app.delete("/admin", function(req, res) {
             }
         }
     }
+    else if (req.query.type == "vendor")
+    {
+        let context = {};
+        // check if items exist under than vendor
+        queries.getItemsByVendor(context, req.query.id, mysql, complete);
+        function complete() {
+            callbackCount++;
+            if (callbackCount === 1) {
+                
+                // if items do not exist under that vendor, delete vendor
+                if (context.vendors.length == 0)
+                {
+                    console.log("No items under that vendor!");
+                    queries.deleteVendor(req.query.id, mysql, complete2)
+                    function complete2() {
+                        callbackCount++;
+                        if (callbackCount === 2) {
+                            res.send("OK");
+                        }
+                    }
+                }
+                else
+                {
+                    console.log("Attempt to delete vendor with existing items... No Changes Made");
+                    res.send("INVALID DELETE");
+                }
+                
+            }
+        }
+    }
     
 });
 
 /****************
-** ADD ROUTES
+** ADMIN - ADD Items/Vendors
 *****************/
-app.post("/addItem", function(req, res) {
-    console.log(req.body);
-    let callbackCount = 0;
-
-    queries.addItem(req.body, mysql, complete);
-    function complete() {
-        callbackCount++;
-        if (callbackCount === 1)
-        {
-            res.redirect("/admin");
-        }
-    }
-});
-
 app.get("/addItem", function(req, res) {
     let context = {};
     let callbackCount = 0;
@@ -169,8 +203,43 @@ app.get("/addItem", function(req, res) {
     }
 });
 
+app.post("/addItem", function(req, res) {
+    console.log(req.body);
+    let callbackCount = 0;
+
+    queries.addItem(req.body, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1)
+        {
+            res.redirect("/admin");
+        }
+    }
+});
+
+app.get("/addVendor", function(req, res) {
+    let context = {};
+    context.title = "Add Vendor";
+
+    res.render("addVendor.ejs", context);
+});
+
+app.post("/addVendor", function(req, res) {
+    console.log(req.body);
+
+    let callbackCount = 0;
+    queries.addVendor(req.body, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount == 1)
+        {
+            res.redirect("/admin");
+        }
+    }
+})
+
 /****************
-** UPDATE ROUTES
+** ADMIN - UPDATE Items/Vendors/Customers
 *****************/
 app.get("/updateItem", function(req, res) {
     let callbackCount = 0;
@@ -202,6 +271,64 @@ app.post("/updateItem", function(req, res) {
     }
 });
 
+app.get("/updateCustomer", function(req, res) {
+    let callbackCount = 0;
+    let context = {};
+    context.title = "Update Customer";
+    console.log("Update Customer Requested ID: " + req.query.id);
+
+    queries.getCustomersByID(context, req.query.id, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1)
+        {
+            res.render("updateCustomer.ejs", context);
+        }
+    }
+});
+
+app.post("/updateCustomer", function(req, res) {
+    console.log(req.body);
+    let callbackCount = 0;
+
+    queries.updateCustomer(req.body, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1)
+        {
+            res.redirect("/admin");
+        }
+    }
+});
+
+app.get("/updateVendor", function(req, res) {
+    let callbackCount = 0;
+    let context = {};
+    context.title = "Update Vendor";
+    console.log("Update Vendor Requested ID: " + req.query.id);
+
+    queries.getVendorsByID(context, req.query.id, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1) {
+            res.render("updateVendor.ejs", context);
+        }
+    }
+});
+
+app.post("/updateVendor", function(req, res) {
+    console.log(req.body);
+    let callbackCount = 0;
+
+    queries.updateVendor(req.body, mysql, complete);
+    function complete() {
+        callbackCount++;
+        if (callbackCount === 1)
+        {
+            res.redirect("/admin");
+        }
+    }
+})
 
 /********************
 ** ERROR middleware
@@ -223,10 +350,3 @@ app.use(function(err, req, res, next) {
 app.listen(PORT, function() {
     console.log(`Server Running on PORT: ${PORT}`);
 })
-
-
-/**************************************************
-** HELPER FUNCTIONS - MOVE TO NEW FILE EVENTUALLY
-TODO: consoidate get functions to take query as argument
-**************************************************/
-

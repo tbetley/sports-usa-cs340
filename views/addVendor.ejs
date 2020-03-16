@@ -1,0 +1,22 @@
+<%- include('partials/header.ejs'); %>
+    
+    <div class="container dataBlock">
+        <h3>Add A Vendor</h3>
+        <form action="/addVendor" method="post">
+            <div class="form-group">
+                <label for="vendorName">Vendor Name</label>
+                <input type="text" class="form-control" id="vendorName" name="vendorName" required>
+            </div>
+            <div class="form-group">
+                <label for="website">Vendor Website</label>
+                <input type="text" class="form-control" id="website" name="website" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Vendor Phone Number</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit New Vendor</button>
+        </form>
+    </div>
+
+<%- include('partials/footer.ejs'); %>

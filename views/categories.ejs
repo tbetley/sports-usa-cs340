@@ -1,11 +1,10 @@
 <%- include('partials/header.ejs'); %>
 
-    <h1><%= title %></h1>
-    
-    <% if(items.length == 0) { %>
-        <h3>No Results Matching: <%=title%></h3>
-    <% }; %>
-    <div class="container">
+    <div class="container dataBlock">
+        <h3 class="center"><%= title %></h3><hr>
+        <% if(items.length == 0) { %>
+            <h3>No Results Matching: <%=title%></h3>
+        <% }; %>
         <div class="row">
             <% items.forEach(function(item, i) { %>
             <div class="col-sm-6">

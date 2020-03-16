@@ -1,0 +1,53 @@
+<%- include('partials/header.ejs'); %>
+
+    <div class="container dataBlock">
+        <h3>Update A Customer</h3>
+        <form action="/updateCustomer" method="post">
+            <div>
+                <input type="hidden" name="customerID" value="<%=customers[0].customerID%>" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="email" value="<%=customers[0].email%>" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="" value="<%=customers[0].phoneNumber%>" required>
+            </div>
+            <div class="form-group">
+                <label for="logIn">Log In:</label>
+                <input type="text" class="form-control" name="logIn" id="logIn" placeholder="Enter Log In Here" value="<%=customers[0].logIn%>" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="firstName">First Name</label>
+                  <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Bob" value="<%=customers[0].firstName%>" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Smith" value="<%=customers[0].lastName%>" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="streetAddress">Street Address:</label>
+                <input type="text" class="form-control" name="streetAddress" id="streetAddress" placeholder="123 Some Drive" value="<%=customers[0].streetAddress%>" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" name="city" id="city" placeholder="Some Town" value="<%=customers[0].city%>" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="zip">Zip</label>
+                  <input type="number" class="form-control" name="zip" id="zip" placeholder="12345" value="<%=customers[0].zip%>" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="state">State</label>
+                  <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<%=customers[0].state%>" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Customer</button>
+        </form>
+    </div>
+
+<%- include('partials/footer.ejs'); %>
