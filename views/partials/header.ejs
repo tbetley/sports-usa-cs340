@@ -37,9 +37,18 @@
                 <a class="dropdown-item" href="/categories/Basketball">Basketball</a>
               </div>
             </li>
-            <li class="nac-item">
+            <li class="nav-item">
               <a class="nav-link" href="/admin">Admin</a>
             </li>
+            <% if(loggedIn) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+              </li>
+            <% } else { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Log In</a>
+              </li>
+            <% }; %>
           </ul>
         </div>
       </nav>

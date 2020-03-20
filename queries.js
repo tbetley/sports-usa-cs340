@@ -82,8 +82,8 @@ function getItemsByID(context, itemID, mysql, complete)
             complete();
         }
         console.log("getItemsByID succeeded...");
-        //console.log(results);
-        context.items = results;
+        //console.log(results[0]);
+        context.items.push(results[0]);
         complete();
     });
 }
@@ -136,16 +136,23 @@ function addItem(req, mysql, complete)
     });
 }
 
-function deleteItem(itemID, mysql, complete)
+function deleteItem(context, itemID, mysql, complete)
 {
     console.log("Deleting the Item with ID: " + itemID);
     mysql.pool.query("DELETE FROM items WHERE itemID=? ", [itemID], function(err, result) {
         if (err)
         {
             console.log(err);
+            context.err = true;
+            console.log("Delete item failed...");
+            complete();
         }
-        console.log("Delete item succeeded...");
-        complete();
+        else
+        {
+            console.log("Delete item succeeded...");
+            complete();
+        }
+        
     });
 }
 
@@ -213,16 +220,23 @@ function addCustomer(req, mysql, complete)
     });
 }
 
-function deleteCustomer(customerID, mysql, complete)
+function deleteCustomer(context, customerID, mysql, complete)
 {
     console.log("Deleting the Customer with ID: " + customerID);
     mysql.pool.query("DELETE FROM customers WHERE customerID=? ", [customerID], function(err, result) {
         if (err)
         {
+            context.err = true;
             console.log(err);
+            console.log("Delete Customer Failed");
+            complete();
         }
-        console.log("Delete customer succeeded...");
-        complete();
+        else
+        {
+            console.log("Delete customer succeeded...");
+            complete();
+        }
+        
     });
 }
 
@@ -256,6 +270,70 @@ function addVendor(req, mysql, complete)
     });
 }
 
+function getCustomerIDByLogin(session, logIn, mysql, complete)
+{
+    let query = "SELECT customerID FROM customers WHERE logIn=? ";
+
+    mysql.pool.query(query, [logIn], function(err, results, fields) {
+        if (err)
+        {
+            console.log(err);
+        }
+        console.log("Results: ");
+        console.log(results);
+
+        if (results[0]) {
+            session.customerID = results[0].customerID;
+        }
+
+        console.log("Get customerID succeeded...");
+        complete();
+    })
+}
+
+function createOrder(context, order, mysql, complete)
+{
+    let query = "INSERT INTO orders(customerID, orderDate, shipStatus, trackingNumber) VALUES (?, ?, ?, ?) ";
+
+    mysql.pool.query(query, [order.customerID, order.orderDate, order.shipStatus, order.trackingNumber], function(err, results, fields) {
+        if (err) {
+            console.log(err);
+        }
+        //console.log(results);
+        context.orderID = results.insertId;
+        console.log("Created Order...");
+        complete();
+    })
+}
+
+function createOrderItem(orderNumber, itemID, quantity, mysql, complete)
+{
+    let query = "INSERT INTO orderItems(orderNumber, itemID, quantity) VALUES (?, ?, ?) ";
+
+    mysql.pool.query(query, [orderNumber, itemID, quantity], function(err, results, fields) {
+        if (err) {
+            console.log(err);
+        }
+        console.log("Created order item");
+        complete();
+    })
+}
+
+function getOrdersByCustomer(context, customerID, mysql, complete)
+{
+    let query = "SELECT orderNumber, orderDate, trackingNumber, shipStatus FROM orders INNER JOIN customers on orders.customerID = customers.customerID WHERE customers.customerID = ? ";
+
+    mysql.pool.query(query, [customerID], function(err, results, fields) {
+        if(err) {
+            console.log(err);
+        }
+        
+        context.orders = results;
+        console.log("Get orders by customer succeeded...");
+        complete();
+    })
+}
+
 
 module.exports.getCustomers = getCustomers;
 module.exports.getItems = getItems;
@@ -274,3 +352,7 @@ module.exports.getVendorsByID = getVendorsByID;
 module.exports.updateVendor = updateVendor;
 module.exports.getItemsByVendor = getItemsByVendor;
 module.exports.deleteVendor = deleteVendor;
+module.exports.getCustomerIDByLogin = getCustomerIDByLogin;
+module.exports.createOrder = createOrder;
+module.exports.createOrderItem = createOrderItem;
+module.exports.getOrdersByCustomer = getOrdersByCustomer;

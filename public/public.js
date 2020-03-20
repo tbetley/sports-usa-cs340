@@ -57,6 +57,10 @@ function deleteItem(itemID) {
         {
             location.reload();
         }
+        else if (req.status >= 200 && req.status < 400 && req.responseText == "INVALID DELETE") 
+        {
+            alert("Cannot delete item, item currently listed in a customer order");
+        }
         else 
         {
             alert("Error is request: " + req.statusText);
@@ -78,6 +82,10 @@ function deleteCustomer(customerID) {
         if (req.status >= 200 && req.status < 400 && req.responseText == "OK")
         {
             location.reload();
+        }
+        else if (req.status >= 200 && req.status < 400 && req.responseText == "INVALID DELETE") 
+        {
+            alert("Cannot delete customer with existing orders");
         }
         else 
         {

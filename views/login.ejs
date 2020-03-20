@@ -1,0 +1,18 @@
+<%- include('partials/header.ejs'); %>
+
+<div class="container dataBlock">
+    <% if(err) { %>
+        <p>ERROR: INVALID LOG IN</p>
+    <% }; %>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <label for="logIn">Enter Customer Username:</label>
+            <input type="text" class="form-control" name="logIn" id="logIn" placeholder="username" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
+    
+</div>
+
+
+<%- include('partials/footer.ejs'); %>

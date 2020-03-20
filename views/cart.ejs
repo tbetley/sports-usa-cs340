@@ -1,12 +1,28 @@
 <%- include('partials/header.ejs'); %>
 
-<h1>Here is your cart</h1>
-<p>List of items added to customer's cart</p>
-
-<button>Remove from Cart</button>
-
-<button type="submit">Check Out</button>
-<p>Check out button could submit items in order to database</p>
+<div class="container dataBlock">
+    <h1>Here is your cart</h1>
+    <table class="table">
+        <tr>
+            <td scope="col">Item</td>
+            <td scope="col">Individual Price</td>
+            <td scope="col">Quantity</td>
+        </tr>
+    <% if (cart) { cart.forEach(function(item) { %>
+        <tr id="itemRow">
+            <td><%= item.itemName%></td>
+            <td><%= item.price%></td>
+            <td><%= item.quantityDesired%></td>
+            <td><a href="/removeFromCart?itemID=<%=item.itemID%>" class="btn btn-danger">Remove</a></td>
+        </tr>
+    <% }) }; %>
+    </table><hr>
+    <a href="/placeOrder" class="btn btn-primary">Place Order</a>
+    <% if(err) { %>
+        <p>ERROR: Must be logged in and have items in your cart!</p>
+    <% }; %>
+    
+</div>
 
 
 <%- include('partials/footer.ejs'); %>

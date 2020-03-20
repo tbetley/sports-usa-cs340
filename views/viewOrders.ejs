@@ -1,0 +1,25 @@
+<%- include('partials/header.ejs'); %>
+
+<div class="container dataBlock">
+    <h1>Orders for Customer: <%=customerID%></h1><hr>
+    <table class="table">
+        <tr>
+            <td scope="col">Order Number</td>
+            <td scope="col">Order Date</td>
+            <td scope="col">Tracking Number</td>
+            <td scope="col">Ship Status</td>
+        </tr>
+    <% if (orders) { orders.forEach(function(order) { %>
+        <tr id="itemRow">
+            <td><%= order.orderNumber%></td>
+            <td><%= order.orderDate%></td>
+            <td><%= order.trackingNumber%></td>
+            <td><%= order.shipStatus%></td>
+        </tr>
+    <% }) }; %>
+    </table>
+    
+</div>
+
+
+<%- include('partials/footer.ejs'); %>
