@@ -1,5 +1,7 @@
 # dev files
 dbcon-dev.js
+init_data.sql
+test.js
 
 # Logs
 logs

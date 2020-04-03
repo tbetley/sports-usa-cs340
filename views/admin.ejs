@@ -15,8 +15,8 @@
                 <td scope="col">Phone</td>
                 <td scope="col">LogIn</td>
                 <td scope="col">City</td>
-                <td scope="col">Zip</td>
                 <td scope="col">State</td>
+                <td scope="col">Is Admin?</td>
             </tr>
         <% customers.forEach(function(customer) { %>
             <tr>
@@ -27,8 +27,8 @@
                 <td><%= customer.phoneNumber%></td>
                 <td><%= customer.logIn%></td>
                 <td><%= customer.city%></td>
-                <td><%= customer.zip%></td>
                 <td><%= customer.state%></td>
+                <td><%= customer.isAdmin%></td>
                 <td><button type="button" class="btn btn-danger" id="customerDelete">Delete</button></td>
                 <td><button type="button" class="btn btn-primary" id="customerUpdate">Update</button></td>
                 <td><a href="/viewOrders?customerID=<%=customer.customerID%>" class="btn btn-secondary">Orders</a></td>

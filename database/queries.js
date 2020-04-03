@@ -1,6 +1,6 @@
 function getCustomers(context, mysql, complete)
 {
-    let query = "SELECT customerID, firstName, lastName, email, phoneNumber, logIn, streetAddress, city, zip, state FROM customers";
+    let query = "SELECT customerID, firstName, lastName, email, phoneNumber, logIn, streetAddress, city, zip, state, isAdmin FROM customers";
     mysql.pool.query(query, function(err, results, fields) {
         if (err) {
             console.log(err);
@@ -208,9 +208,9 @@ function addCustomer(req, mysql, complete)
 {
     console.log("Adding the following Customer: " + req.logIn);
     //console.log(req);
-    let query = "INSERT INTO customers (email, phoneNumber, logIn, firstName, lastName, streetAddress, city, zip, state) values (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+    let query = "INSERT INTO customers (email, phoneNumber, logIn, salt, hash, firstName, lastName, streetAddress, city, zip, state, isAdmin) values (?, ?, ?, ?, SHA2(?, 256), ?, ?, ?, ?, ?, ?, ?) ";
 
-    mysql.pool.query(query, [req.email, req.phoneNumber, req.logIn, req.firstName, req.lastName, req.streetAddress, req.city, req.zip, req.state], function(err, results, fields) {
+    mysql.pool.query(query, [req.email, req.phoneNumber, req.logIn, req.salt, req.hash, req.firstName, req.lastName, req.streetAddress, req.city, req.zip, req.state, 0], function(err, results, fields) {
         if (err) {
             console.log(err);
             complete();
@@ -280,14 +280,37 @@ function getCustomerIDByLogin(session, logIn, mysql, complete)
             console.log(err);
         }
         console.log("Results: ");
-        console.log(results);
+        console.log(results[0]);
 
         if (results[0]) {
             session.customerID = results[0].customerID;
         }
 
+        console.log(session);
         console.log("Get customerID succeeded...");
         complete();
+    })
+}
+
+function getCustomersByLogin(context, logIn, mysql, complete)
+{
+    let query = "SELECT * FROM customers WHERE logIn=? ";
+
+    mysql.pool.query(query, [logIn], function(err, results, fields) {
+        if (err)
+        {
+            console.log(err);
+            context.err;
+            complete();
+        }
+        else
+        {
+            context.results = results;
+            //console.log("Results from getCustomersByLogin: ");
+            //console.log(context);
+            complete();
+        }
+        
     })
 }
 
@@ -356,3 +379,4 @@ module.exports.getCustomerIDByLogin = getCustomerIDByLogin;
 module.exports.createOrder = createOrder;
 module.exports.createOrderItem = createOrderItem;
 module.exports.getOrdersByCustomer = getOrdersByCustomer;
+module.exports.getCustomersByLogin = getCustomersByLogin;
